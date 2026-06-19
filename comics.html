@@ -10,19 +10,19 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg:       #09090e;
-      --surface:  #101017;
-      --card:     rgba(255,255,255,0.035);
+      --bg:         #09090e;
+      --surface:    #101017;
+      --card:       rgba(255,255,255,0.035);
       --card-hover: rgba(255,255,255,0.06);
-      --border:   rgba(255,255,255,0.07);
-      --border-hover: rgba(255,255,255,0.14);
-      --red:      #b91c1c;
-      --red-glow: rgba(185,28,28,0.18);
-      --gold:     #c9a84c;
-      --gold-dim: rgba(201,168,76,0.12);
-      --text:     #e2e2e6;
-      --muted:    #6b6b7a;
-      --white:    #ffffff;
+      --border:     rgba(255,255,255,0.07);
+      --border-h:   rgba(255,255,255,0.14);
+      --red:        #b91c1c;
+      --red-glow:   rgba(185,28,28,0.18);
+      --gold:       #c9a84c;
+      --gold-dim:   rgba(201,168,76,0.12);
+      --text:       #e2e2e6;
+      --muted:      #6b6b7a;
+      --white:      #ffffff;
     }
     html { scroll-behavior: smooth; }
     body {
@@ -33,170 +33,119 @@
       -webkit-font-smoothing: antialiased;
       min-height: 100vh;
     }
-
-    /* NAV */
     nav {
       position: sticky; top: 0; z-index: 100;
       display: flex; align-items: center; justify-content: space-between;
       padding: 1rem 1.5rem;
-      background: rgba(9,9,14,0.85);
+      background: rgba(9,9,14,0.88);
       backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border);
     }
     .nav-logo { font-family:'Space Grotesk',sans-serif; font-size:1.05rem; font-weight:600; color:var(--white); text-decoration:none; }
     .nav-logo span { color:var(--gold); }
-    .nav-link { font-family:'Space Grotesk',sans-serif; font-size:0.8rem; font-weight:500; color:var(--muted); text-decoration:none; transition:color 0.2s; }
+    .nav-link { font-family:'Space Grotesk',sans-serif; font-size:0.8rem; font-weight:500; color:var(--muted); text-decoration:none; transition:color 0.2s; display:flex; align-items:center; gap:4px; }
     .nav-link:hover { color:var(--white); }
 
-    /* PAGE HEADER */
-    .page-header {
-      padding: 4rem 1.5rem 2.5rem;
-      max-width: 900px;
-      margin: 0 auto;
-      border-bottom: 1px solid var(--border);
-    }
-    .header-tag { font-family:'Space Grotesk',sans-serif; font-size:0.65rem; font-weight:600; letter-spacing:0.25em; text-transform:uppercase; color:var(--gold); margin-bottom:0.8rem; }
-    .header-title { font-family:'Space Grotesk',sans-serif; font-size:clamp(2rem,6vw,3.2rem); font-weight:700; letter-spacing:-0.02em; color:var(--white); line-height:1.1; }
-    .header-sub { font-size:0.9rem; color:var(--muted); margin-top:0.75rem; line-height:1.6; }
-    .header-count { display:inline-block; margin-top:1rem; font-family:'Space Grotesk',sans-serif; font-size:0.72rem; font-weight:500; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); background:var(--card); border:1px solid var(--border); padding:0.3rem 0.8rem; border-radius:100px; }
+    .page-header { padding:3.5rem 1.5rem 2rem; max-width:960px; margin:0 auto; }
+    .header-tag { font-family:'Space Grotesk',sans-serif; font-size:0.65rem; font-weight:600; letter-spacing:0.25em; text-transform:uppercase; color:var(--gold); margin-bottom:0.6rem; }
+    .header-title { font-family:'Space Grotesk',sans-serif; font-size:clamp(2rem,6vw,3rem); font-weight:700; letter-spacing:-0.02em; color:var(--white); line-height:1.1; }
+    .header-sub { font-size:0.88rem; color:var(--muted); margin-top:0.6rem; }
 
-    /* FILTER BAR */
-    .filter-bar {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 1.2rem 1.5rem;
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      border-bottom: 1px solid var(--border);
+    .toolbar {
+      max-width: 960px; margin: 0 auto;
+      padding: 0 1.5rem 1rem;
+      display: flex; flex-direction: column; gap: 0.75rem;
     }
-    .filter-btn {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.75rem;
-      font-weight: 500;
-      padding: 0.3rem 0.9rem;
-      border-radius: 100px;
-      border: 1px solid var(--border);
-      background: transparent;
-      color: var(--muted);
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-    .filter-btn:hover { color:var(--white); border-color:rgba(255,255,255,0.2); }
-    .filter-btn.active { background:var(--white); color:#09090e; border-color:var(--white); }
-
-    /* SEARCH */
-    .search-wrap {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 1rem 1.5rem 0;
-    }
+    .search-wrap { position: relative; }
+    .search-icon { position:absolute; left:0.85rem; top:50%; transform:translateY(-50%); pointer-events:none; color:var(--muted); }
     .search-input {
       width: 100%;
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 0.65rem 1rem 0.65rem 2.6rem;
+      padding: 0.65rem 1rem 0.65rem 2.5rem;
       color: var(--text);
       font-family: 'Inter', sans-serif;
       font-size: 0.875rem;
       outline: none;
       transition: border-color 0.2s;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' viewBox='0 0 24 24' stroke='%236b6b7a' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: 0.75rem center;
     }
     .search-input:focus { border-color: rgba(255,255,255,0.18); }
     .search-input::placeholder { color: var(--muted); }
 
-    /* COMICS GRID */
-    .grid-wrap { max-width:900px; margin:0 auto; padding:1.5rem 1.5rem 5rem; }
+    .filters { display:flex; gap:0.4rem; flex-wrap:wrap; }
+    .filter-btn {
+      font-family:'Space Grotesk',sans-serif;
+      font-size:0.72rem; font-weight:500;
+      padding:0.28rem 0.85rem;
+      border-radius:100px;
+      border:1px solid var(--border);
+      background:transparent;
+      color:var(--muted);
+      cursor:pointer;
+      transition:all 0.15s;
+      white-space: nowrap;
+    }
+    .filter-btn:hover { color:var(--white); border-color:rgba(255,255,255,0.2); }
+    .filter-btn.active { background:var(--white); color:#09090e; border-color:var(--white); }
+
+    .count-bar {
+      max-width:960px; margin:0 auto;
+      padding:0.5rem 1.5rem 1rem;
+      font-family:'Space Grotesk',sans-serif;
+      font-size:0.72rem; font-weight:500;
+      color:var(--muted);
+      border-bottom:1px solid var(--border);
+    }
+
+    .grid-wrap { max-width:960px; margin:0 auto; padding:1.5rem 1.5rem 5rem; }
     .comics-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 1rem;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 0.9rem;
     }
     @media(max-width:360px){ .comics-grid{ grid-template-columns:repeat(2,1fr); } }
 
-    /* COMIC CARD */
     .comic-card {
-      display: flex;
-      flex-direction: column;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      overflow: hidden;
-      text-decoration: none;
-      transition: border-color 0.2s, transform 0.2s, background 0.2s;
-      cursor: pointer;
+      display:flex; flex-direction:column;
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:10px;
+      overflow:hidden;
+      text-decoration:none;
+      transition:border-color 0.18s, transform 0.18s, background 0.18s;
     }
-    .comic-card:hover {
-      border-color: var(--border-hover);
-      background: var(--card-hover);
-      transform: translateY(-3px);
-    }
-    .comic-cover-wrap {
-      position: relative;
-      aspect-ratio: 2/3;
-      background: #1a1a24;
-      overflow: hidden;
-    }
-    .comic-cover {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      transition: transform 0.3s;
-    }
-    .comic-card:hover .comic-cover { transform: scale(1.04); }
+    .comic-card.clickable { cursor:pointer; }
+    .comic-card.clickable:hover { border-color:var(--border-h); background:var(--card-hover); transform:translateY(-3px); }
 
-    /* Placeholder when no image */
+    .cover-wrap { position:relative; aspect-ratio:2/3; background:#131320; overflow:hidden; }
+    .cover-img { width:100%; height:100%; object-fit:cover; display:block; transition:transform 0.3s; }
+    .comic-card.clickable:hover .cover-img { transform:scale(1.04); }
+
     .cover-placeholder {
-      width: 100%; height: 100%;
-      display: flex; flex-direction:column; align-items:center; justify-content:center;
-      gap: 0.5rem;
-      background: linear-gradient(135deg, #1a1a24 0%, #12121a 100%);
+      width:100%; height:100%;
+      display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.5rem;
+      background:linear-gradient(150deg,#16162a 0%,#0e0e1a 100%);
     }
-    .cover-placeholder svg { opacity:0.25; }
-    .cover-placeholder span { font-family:'Space Grotesk',sans-serif; font-size:0.6rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); opacity:0.5; }
+    .cover-placeholder svg { opacity:0.18; }
+    .cover-placeholder span { font-family:'Space Grotesk',sans-serif; font-size:0.55rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); opacity:0.5; }
 
-    .comic-info {
-      padding: 0.7rem 0.75rem 0.85rem;
-      flex: 1;
-    }
+    .comic-info { padding:0.65rem 0.7rem 0.8rem; flex:1; }
     .comic-series {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.6rem;
-      font-weight: 600;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 0.2rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      font-family:'Space Grotesk',sans-serif;
+      font-size:0.56rem; font-weight:600; letter-spacing:0.14em; text-transform:uppercase;
+      color:var(--gold); margin-bottom:0.18rem;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
     }
     .comic-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: var(--white);
-      line-height: 1.3;
-      margin-bottom: 0.25rem;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
+      font-family:'Space Grotesk',sans-serif;
+      font-size:0.76rem; font-weight:600; color:var(--white); line-height:1.3; margin-bottom:0.22rem;
+      display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
     }
-    .comic-meta {
-      font-size: 0.68rem;
-      color: var(--muted);
-    }
+    .comic-meta { font-size:0.66rem; color:var(--muted); }
 
-    /* NO RESULTS */
-    .no-results { text-align:center; padding:4rem 1.5rem; color:var(--muted); font-family:'Space Grotesk',sans-serif; font-size:0.9rem; display:none; }
+    .no-results { text-align:center; padding:5rem 1.5rem; color:var(--muted); font-family:'Space Grotesk',sans-serif; font-size:0.9rem; display:none; }
 
-    /* FOOTER */
     footer { padding:2rem 1.5rem; border-top:1px solid var(--border); display:flex; flex-direction:column; align-items:center; gap:0.5rem; text-align:center; }
     .footer-logo { font-family:'Space Grotesk',sans-serif; font-size:0.9rem; font-weight:600; color:var(--white); }
     .footer-logo span { color:var(--gold); }
@@ -208,7 +157,7 @@
   <nav>
     <a class="nav-logo" href="index.html">Bomb's <span>Archive</span></a>
     <a class="nav-link" href="index.html">
-      <svg style="display:inline;vertical-align:-2px;margin-right:4px" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
       Home
     </a>
   </nav>
@@ -216,15 +165,18 @@
   <div class="page-header">
     <p class="header-tag">Bomb's Archive</p>
     <h1 class="header-title">Comics</h1>
-    <p class="header-sub">The Angry Birds comics collection. Click any issue to read.</p>
-    <span class="header-count" id="count-label">Loading...</span>
+    <p class="header-sub">Click any issue to open it. Use the filters or search to find something specific.</p>
   </div>
 
-  <div class="search-wrap">
-    <input class="search-input" type="search" id="search" placeholder="Search by title, series, or issue..." autocomplete="off">
+  <div class="toolbar">
+    <div class="search-wrap">
+      <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input class="search-input" type="search" id="search" placeholder="Search by title, series, or issue..." autocomplete="off">
+    </div>
+    <div class="filters" id="filter-bar"></div>
   </div>
 
-  <div class="filter-bar" id="filter-bar"></div>
+  <div class="count-bar" id="count-bar">92 issues</div>
 
   <div class="grid-wrap">
     <div class="comics-grid" id="grid"></div>
@@ -237,167 +189,156 @@
   </footer>
 
   <script>
-    // ─────────────────────────────────────────────────────────
-    //  COMICS DATA — edit this list to add your comics!
+    // ─────────────────────────────────────────────────────────────────────
+    //  HOW TO ADD COVERS:
+    //  1. Get cover images (screenshot the first page, or find them online)
+    //  2. Save them as JPG files
+    //  3. Upload them to a "covers/" folder in your GitHub repo
+    //  4. The filenames must match what's listed in the "cover" field below
     //
-    //  Each entry:
-    //    title   : shown on the card
-    //    series  : used for the filter buttons at the top
-    //    issue   : e.g. "#1", "Vol.1", "Special"
-    //    year    : publication year (optional)
-    //    cover   : path to the cover image you upload to GitHub
-    //              e.g. "covers/abc-1.jpg"
-    //              Leave as "" if you don't have a cover yet
-    //    file    : path or URL to the actual comic file
-    //              e.g. "files/angry-birds-comics-01.cbz"
-    //              Leave as "" if not hosted yet
-    // ─────────────────────────────────────────────────────────
+    //  HOW TO LINK FILES:
+    //  1. Upload your comic files to a "files/" folder in your GitHub repo
+    //  2. The filenames must EXACTLY match your actual files (including the
+    //     "SERIES, " prefix if that's how they're named on your device)
+    //  3. GitHub has a 25MB limit per file — if comics are bigger, leave
+    //     the file field empty ("") for now and cards just won't be clickable
+    // ─────────────────────────────────────────────────────────────────────
     const COMICS = [
-      {
-        title:  "Angry Birds Comics",
-        series: "Angry Birds Comics",
-        issue:  "#1",
-        year:   "2014",
-        cover:  "covers/abc-01.jpg",
-        file:   ""
-      },
-      {
-        title:  "Angry Birds Comics",
-        series: "Angry Birds Comics",
-        issue:  "#2",
-        year:   "2014",
-        cover:  "covers/abc-02.jpg",
-        file:   ""
-      },
-      {
-        title:  "Angry Birds Comics",
-        series: "Angry Birds Comics",
-        issue:  "#3",
-        year:   "2014",
-        cover:  "covers/abc-03.jpg",
-        file:   ""
-      },
-      {
-        title:  "Angry Birds Comics",
-        series: "Angry Birds Comics",
-        issue:  "#4",
-        year:   "2014",
-        cover:  "covers/abc-04.jpg",
-        file:   ""
-      },
-      {
-        title:  "Angry Birds Comics",
-        series: "Angry Birds Comics",
-        issue:  "#5",
-        year:   "2015",
-        cover:  "covers/abc-05.jpg",
-        file:   ""
-      },
-      {
-        title:  "Angry Birds Comics",
-        series: "Angry Birds Comics",
-        issue:  "#6",
-        year:   "2015",
-        cover:  "covers/abc-06.jpg",
-        file:   ""
-      },
-      {
-        title:  "Angry Birds Comics Holiday Special",
-        series: "Specials",
-        issue:  "Holiday 2013",
-        year:   "2013",
-        cover:  "covers/abc-holiday-2013.jpg",
-        file:   ""
-      },
-      {
-        title:  "Angry Birds Comics Holiday Special",
-        series: "Specials",
-        issue:  "Holiday 2014",
-        year:   "2014",
-        cover:  "covers/abc-holiday-2014.jpg",
-        file:   ""
-      },
-      {
-        title:  "Angry Birds Transformers",
-        series: "Transformers",
-        issue:  "#1",
-        year:   "2014",
-        cover:  "covers/abt-01.jpg",
-        file:   ""
-      },
-      {
-        title:  "Angry Birds Transformers",
-        series: "Transformers",
-        issue:  "#2",
-        year:   "2014",
-        cover:  "covers/abt-02.jpg",
-        file:   ""
-      },
-      {
-        title:  "Angry Birds Transformers",
-        series: "Transformers",
-        issue:  "#3",
-        year:   "2014",
-        cover:  "covers/abt-03.jpg",
-        file:   ""
-      },
-      {
-        title:  "Angry Birds Transformers",
-        series: "Transformers",
-        issue:  "#4",
-        year:   "2014",
-        cover:  "covers/abt-04.jpg",
-        file:   ""
-      },
-      {
-        title:  "Angry Birds Comics (2016)",
-        series: "Comics 2016",
-        issue:  "#1",
-        year:   "2016",
-        cover:  "covers/abc2016-01.jpg",
-        file:   ""
-      },
-      {
-        title:  "Angry Birds Comics (2016)",
-        series: "Comics 2016",
-        issue:  "#2",
-        year:   "2016",
-        cover:  "covers/abc2016-02.jpg",
-        file:   ""
-      },
-      {
-        title:  "Angry Birds Comics (2016)",
-        series: "Comics 2016",
-        issue:  "#3",
-        year:   "2016",
-        cover:  "covers/abc2016-03.jpg",
-        file:   ""
-      },
-      {
-        title:  "Angry Birds Comics (2016)",
-        series: "Comics 2016",
-        issue:  "#4",
-        year:   "2016",
-        cover:  "covers/abc2016-04.jpg",
-        file:   ""
-      },
-    ];
-    // ─────────────────────────────────────────────────────────
 
-    const grid       = document.getElementById('grid');
-    const noResults  = document.getElementById('no-results');
-    const searchEl   = document.getElementById('search');
-    const filterBar  = document.getElementById('filter-bar');
-    const countLabel = document.getElementById('count-label');
+      // ── STANDALONE ────────────────────────────────────────────────────
+      { title:"Two Worlds Collide Part 1",              series:"Standalone", issue:"",          cover:"covers/two-worlds-1.jpg",          file:"files/ROOT, Two Worlds Collide Part 1.pdf" },
+      { title:"Two Worlds Collide Part 2",              series:"Standalone", issue:"",          cover:"covers/two-worlds-2.jpg",          file:"files/ROOT, Two Worlds Collide Part 2.pdf" },
+      { title:"The 4th Egg",                            series:"Standalone", issue:"",          cover:"covers/the-4th-egg.jpg",           file:"files/ROOT, The 4th Egg.pdf" },
+      { title:"Cleared For Takeoff",                    series:"Standalone", issue:"",          cover:"covers/cleared-for-takeoff.jpg",   file:"files/ROOT, Cleared For Takeoff.pdf" },
+      { title:"Good Egg Bad Egg",                       series:"Standalone", issue:"",          cover:"covers/good-egg-bad-egg.jpg",      file:"files/ROOT, Good Egg Bad Egg.pdf" },
+      { title:"Year of the Dragon",                     series:"Standalone", issue:"Special",   cover:"covers/year-of-the-dragon.jpg",    file:"files/ROOT, Year of the Dragon Comic.pdf" },
+      { title:"Silver's Smarts: Impactful as Always!",  series:"Standalone", issue:"",          cover:"covers/silvers-smarts.jpg",        file:"files/ROOT, Silver's Smarts Impactful as Always!.pdf" },
+      { title:"Ruby On Ice",                            series:"Standalone", issue:"",          cover:"covers/ruby-on-ice.jpg",           file:"files/ROOT, Ruby On Ice.pdf" },
+      { title:"The Royal Weigh-In",                     series:"Standalone", issue:"",          cover:"covers/the-royal-weigh-in.jpg",    file:"files/ROOT, The Royal Weigh-In.pdf" },
+      { title:"Not All Heroes Wear Capes",              series:"Standalone", issue:"",          cover:"covers/not-all-heroes.jpg",        file:"files/ROOT, Not All Heroes Wear Capes.pdf" },
+      { title:"Night Of The Living Zigs",               series:"Standalone", issue:"",          cover:"covers/night-living-zigs.jpg",     file:"files/ROOT, Night Of The Living Zigs.pdf" },
+      { title:"New Year's Special",                     series:"Standalone", issue:"Special",   cover:"covers/new-years-special.jpg",     file:"files/ROOT, New Year's Special Comic.pdf" },
+      { title:"Never Meet Your Heroes",                 series:"Standalone", issue:"",          cover:"covers/never-meet-heroes.jpg",     file:"files/ROOT, Never Meet Your Heroes.pdf" },
+      { title:"Angry Birds Ham'o'ween",                 series:"Standalone", issue:"Special",   cover:"covers/hamoween.jpg",              file:"files/ROOT, Angry Birds Ham'o'ween Comic.pdf" },
+      { title:"Angry Birds Space",                      series:"Standalone", issue:"Special",   cover:"covers/ab-space-comic.jpg",        file:"files/ROOT, Angry Birds Space Comic.pdf" },
+      { title:"Angry Birds Valentine: Egg no Maki",     series:"Standalone", issue:"Special",   cover:"covers/valentine-egg.jpg",         file:"files/ROOT, Angry Birds Valentine Egg no Maki.pdf" },
+      { title:"Jo's Stage Flight",                      series:"Standalone", issue:"",          cover:"covers/jos-stage-flight.jpg",      file:"files/ROOT, Jo's Stage Flight.pdf" },
+      { title:"Bad Piggies",                            series:"Standalone", issue:"Special",   cover:"covers/bad-piggies-comic.jpg",     file:"files/ROOT, Bad Piggies Comic.pdf" },
+      { title:"Blast From The Past",                    series:"Standalone", issue:"",          cover:"covers/blast-from-past.jpg",       file:"files/ROOT, Blast From The Past.pdf" },
+      { title:"Christmas Special",                      series:"Standalone", issue:"Special",   cover:"covers/christmas-special.jpg",     file:"files/ROOT, Christmas Special.pdf" },
+      { title:"Dahlia's Phantom Pain",                  series:"Standalone", issue:"",          cover:"covers/dahlias-phantom-pain.jpg",  file:"files/ROOT, Dahlia's Phantom Pain.pdf" },
+      { title:"Jo's Gift",                              series:"Standalone", issue:"",          cover:"covers/jos-gift.jpg",              file:"files/ROOT, Jo's Gift.pdf" },
+      { title:"Big Movie Eggstravaganza",               series:"Standalone", issue:"Special",   cover:"covers/big-movie-eggstravaganza.jpg", file:"files/ROOT, Big Movie Eggstravaganza.cbr" },
+      { title:"Hektor Porko Awakens",                   series:"Standalone", issue:"",          cover:"covers/hektor-porko-awakens.jpg",  file:"files/ROOT, Hektor Porko Awakens.pdf" },
+      { title:"Don't Wake The Red",                     series:"Standalone", issue:"",          cover:"covers/dont-wake-the-red.jpg",     file:"files/ROOT, Don't Wake The Red.pdf" },
+      { title:"Your Biggest Fan",                       series:"Standalone", issue:"",          cover:"covers/your-biggest-fan.jpg",      file:"files/ROOT, Your Biggest Fan.pdf" },
+      { title:"Angry Birds Comic Strip Collection",     series:"Standalone", issue:"Collection",cover:"covers/comic-strip-collection.jpg",file:"files/ROOT, Angry Birds Comic Strip Collection.pdf" },
+      { title:"Moon Festival",                          series:"Standalone", issue:"Special",   cover:"covers/moon-festival.jpg",         file:"files/ROOT, Moon Festival Comic.pdf" },
+
+      // ── SUPER ANGRY BIRDS ─────────────────────────────────────────────
+      { title:"Super Angry Birds", series:"Super Angry Birds", issue:"#1",  cover:"covers/super-ab-1.jpg",   file:"files/Super Angry Birds, Super Angry Birds #1.cbr" },
+      { title:"Super Angry Birds", series:"Super Angry Birds", issue:"#2",  cover:"covers/super-ab-2.jpg",   file:"files/Super Angry Birds, Super Angry Birds #2.cbr" },
+      { title:"Super Angry Birds", series:"Super Angry Birds", issue:"#3",  cover:"covers/super-ab-3.jpg",   file:"files/Super Angry Birds, Super Angry Birds #3.cbr" },
+      { title:"Super Angry Birds", series:"Super Angry Birds", issue:"#4",  cover:"covers/super-ab-4.jpg",   file:"files/Super Angry Birds, Super Angry Birds #4.cbr" },
+      { title:"Super Angry Birds", series:"Super Angry Birds", issue:"TPB", cover:"covers/super-ab-tpb.jpg", file:"files/Super Angry Birds, Super Angry Birds TPB.cbr" },
+
+      // ── ORIGINAL RUN ──────────────────────────────────────────────────
+      { title:"Angry Birds Comics", series:"Original Run", issue:"#1",             year:"2014", cover:"covers/orig-1.jpg",       file:"files/Angry Birds Comics (Original Run), Angry Birds Comics #1.cbr" },
+      { title:"Angry Birds Comics", series:"Original Run", issue:"#2",             year:"2014", cover:"covers/orig-2.jpg",       file:"files/Angry Birds Comics (Original Run), Angry Birds Comics #2.cbr" },
+      { title:"Angry Birds Comics", series:"Original Run", issue:"#3",             year:"2014", cover:"covers/orig-3.jpg",       file:"files/Angry Birds Comics (Original Run), Angry Birds Comics #3.cbr" },
+      { title:"Angry Birds Comics", series:"Original Run", issue:"#4",             year:"2014", cover:"covers/orig-4.jpg",       file:"files/Angry Birds Comics (Original Run), Angry Birds Comics #4.cbr" },
+      { title:"Angry Birds Comics", series:"Original Run", issue:"#5",             year:"2014", cover:"covers/orig-5.jpg",       file:"files/Angry Birds Comics (Original Run), Angry Birds Comics #5.cbr" },
+      { title:"Angry Birds Comics", series:"Original Run", issue:"#6",             year:"2014", cover:"covers/orig-6.jpg",       file:"files/Angry Birds Comics (Original Run), Angry Birds Comics #6.cbr" },
+      { title:"Angry Birds Comics", series:"Original Run", issue:"#7",             year:"2015", cover:"covers/orig-7.jpg",       file:"files/Angry Birds Comics (Original Run), Angry Birds Comics #7.cbr" },
+      { title:"Angry Birds Comics", series:"Original Run", issue:"#8",             year:"2015", cover:"covers/orig-8.jpg",       file:"files/Angry Birds Comics (Original Run), Angry Birds Comics #8.cbr" },
+      { title:"Angry Birds Comics", series:"Original Run", issue:"#9",             year:"2015", cover:"covers/orig-9.jpg",       file:"files/Angry Birds Comics (Original Run), Angry Birds Comics #9.cbr" },
+      { title:"Angry Birds Comics", series:"Original Run", issue:"#10",            year:"2015", cover:"covers/orig-10.jpg",      file:"files/Angry Birds Comics (Original Run), Angry Birds Comics #10.cbr" },
+      { title:"Angry Birds Comics", series:"Original Run", issue:"#11",            year:"2015", cover:"covers/orig-11.jpg",      file:"files/Angry Birds Comics (Original Run), Angry Birds Comics #11.cbr" },
+      { title:"Angry Birds Comics", series:"Original Run", issue:"#12",            year:"2015", cover:"covers/orig-12.jpg",      file:"files/Angry Birds Comics (Original Run), Angry Birds Comics #12.cbr" },
+      { title:"Angry Birds Comics", series:"Original Run", issue:"Holiday Special",year:"",     cover:"covers/orig-holiday.jpg", file:"files/Angry Birds Comics (Original Run), Angry Birds Comics - Holiday Special.cbr" },
+
+      // ── 2016 SERIES ───────────────────────────────────────────────────
+      { title:"Angry Birds Comics", series:"2016 Series", issue:"#1",  year:"2016", cover:"covers/2016-1.jpg",  file:"files/Angry Birds (2016), Angry Birds Comics #1.cbr" },
+      { title:"Angry Birds Comics", series:"2016 Series", issue:"#2",  year:"2016", cover:"covers/2016-2.jpg",  file:"files/Angry Birds (2016), Angry Birds Comics #2.cbr" },
+      { title:"Angry Birds Comics", series:"2016 Series", issue:"#3",  year:"2016", cover:"covers/2016-3.jpg",  file:"files/Angry Birds (2016), Angry Birds Comics #3.cbr" },
+      { title:"Angry Birds Comics", series:"2016 Series", issue:"#4",  year:"2016", cover:"covers/2016-4.jpg",  file:"files/Angry Birds (2016), Angry Birds Comics #4.cbr" },
+      { title:"Angry Birds Comics", series:"2016 Series", issue:"#5",  year:"2016", cover:"covers/2016-5.jpg",  file:"files/Angry Birds (2016), Angry Birds Comics #5.cbr" },
+      { title:"Angry Birds Comics", series:"2016 Series", issue:"#6",  year:"2016", cover:"covers/2016-6.jpg",  file:"files/Angry Birds (2016), Angry Birds Comics #6.cbr" },
+      { title:"Angry Birds Comics", series:"2016 Series", issue:"#7",  year:"2016", cover:"covers/2016-7.jpg",  file:"files/Angry Birds (2016), Angry Birds Comics #7.cbr" },
+      { title:"Angry Birds Comics", series:"2016 Series", issue:"#8",  year:"2017", cover:"covers/2016-8.jpg",  file:"files/Angry Birds (2016), Angry Birds Comics #8.cbr" },
+      { title:"Angry Birds Comics", series:"2016 Series", issue:"#9",  year:"2017", cover:"covers/2016-9.jpg",  file:"files/Angry Birds (2016), Angry Birds Comics #9.cbr" },
+      { title:"Angry Birds Comics", series:"2016 Series", issue:"#10", year:"2017", cover:"covers/2016-10.jpg", file:"files/Angry Birds (2016), Angry Birds Comics #10.cbr" },
+      { title:"Angry Birds Comics", series:"2016 Series", issue:"#11", year:"2017", cover:"covers/2016-11.jpg", file:"files/Angry Birds (2016), Angry Birds Comics #11.cbr" },
+      { title:"Angry Birds Comics", series:"2016 Series", issue:"#12", year:"2017", cover:"covers/2016-12.jpg", file:"files/Angry Birds (2016), Angry Birds Comics #12.cbr" },
+
+      // ── GAME PLAY ─────────────────────────────────────────────────────
+      { title:"Angry Birds Game Play", series:"Game Play", issue:"#1",  cover:"covers/gameplay-1.jpg",   file:"files/Angry Birds Game Play, Angry Birds Game Play #1.cbr" },
+      { title:"Angry Birds Game Play", series:"Game Play", issue:"#2",  cover:"covers/gameplay-2.jpg",   file:"files/Angry Birds Game Play, Angry Birds Game Play #2.cbr" },
+      { title:"Angry Birds Game Play", series:"Game Play", issue:"#3",  cover:"covers/gameplay-3.jpg",   file:"files/Angry Birds Game Play, Angry Birds Game Play #3.cbr" },
+      { title:"Angry Birds Game Play", series:"Game Play", issue:"TPB", cover:"covers/gameplay-tpb.jpg", file:"files/Angry Birds Game Play, Angry Birds Game Play TPB.cbr" },
+
+      // ── QUARTERLY ─────────────────────────────────────────────────────
+      { title:"Angry Birds Quarterly: Furious Fowl",          series:"Quarterly", issue:"", cover:"covers/quarterly-furious.jpg",  file:"files/Angry Birds Quarterly, Angry Birds Comics Quarterly - Furious Fowl.cbr" },
+      { title:"Angry Birds Quarterly: Monsters and Mistletoe",series:"Quarterly", issue:"", cover:"covers/quarterly-monsters.jpg", file:"files/Angry Birds Quarterly, Angry Birds Comics Quarterly - Monsters and Mistletoe.cbr" },
+
+      // ── TRANSFORMERS ──────────────────────────────────────────────────
+      { title:"Angry Birds / Transformers", series:"Transformers", issue:"#1", year:"2014", cover:"covers/tf-1.jpg", file:"files/Angry Birds Transformers, Angry Birds-Transformers #1.cbr" },
+      { title:"Angry Birds / Transformers", series:"Transformers", issue:"#2", year:"2014", cover:"covers/tf-2.jpg", file:"files/Angry Birds Transformers, Angry Birds-Transformers #2.cbr" },
+      { title:"Angry Birds / Transformers", series:"Transformers", issue:"#3", year:"2014", cover:"covers/tf-3.jpg", file:"files/Angry Birds Transformers, Angry Birds-Transformers #3.cbr" },
+      { title:"Angry Birds / Transformers", series:"Transformers", issue:"#4", year:"2014", cover:"covers/tf-4.jpg", file:"files/Angry Birds Transformers, Angry Birds-Transformers #4.cbr" },
+
+      // ── FLIGHT SCHOOL ─────────────────────────────────────────────────
+      { title:"Angry Birds: Flight School", series:"Flight School", issue:"#1",  cover:"covers/fs-1.jpg",   file:"files/Angry Birds Flight School, Angry Birds - Flight School #1.cbr" },
+      { title:"Angry Birds: Flight School", series:"Flight School", issue:"#2",  cover:"covers/fs-2.jpg",   file:"files/Angry Birds Flight School, Angry Birds - Flight School #2.cbr" },
+      { title:"Angry Birds: Flight School", series:"Flight School", issue:"#3",  cover:"covers/fs-3.jpg",   file:"files/Angry Birds Flight School, Angry Birds - Flight School #3.cbr" },
+      { title:"Angry Birds: Flight School", series:"Flight School", issue:"TPB", cover:"covers/fs-tpb.jpg", file:"files/Angry Birds Flight School, Angry Birds - Flight School TPB.cbr" },
+
+      // ── CLASSICS ──────────────────────────────────────────────────────
+      { title:"Angry Birds Classic", series:"Classics", issue:"#1",  cover:"covers/classic-1.jpg",  file:"files/Angry Birds Classics, Angry Birds Classic #1.pdf" },
+      { title:"Angry Birds Classic", series:"Classics", issue:"#2",  cover:"covers/classic-2.jpg",  file:"files/Angry Birds Classics, Angry Birds Classic #2.pdf" },
+      { title:"Angry Birds Classic", series:"Classics", issue:"#3",  cover:"covers/classic-3.jpg",  file:"files/Angry Birds Classics, Angry Birds Classic #3.pdf" },
+      { title:"Angry Birds Classic", series:"Classics", issue:"#4",  cover:"covers/classic-4.jpg",  file:"files/Angry Birds Classics, Angry Birds Classic #4.pdf" },
+      { title:"Angry Birds Classic", series:"Classics", issue:"#5",  cover:"covers/classic-5.jpg",  file:"files/Angry Birds Classics, Angry Birds Classic #5.pdf" },
+      { title:"Angry Birds Classic", series:"Classics", issue:"#6",  cover:"covers/classic-6.jpg",  file:"files/Angry Birds Classics, Angry Birds Classic #6.pdf" },
+      { title:"Angry Birds Classic", series:"Classics", issue:"#7",  cover:"covers/classic-7.jpg",  file:"files/Angry Birds Classics, Angry Birds Classic #7.pdf" },
+      { title:"Angry Birds Classic", series:"Classics", issue:"#8",  cover:"covers/classic-8.jpg",  file:"files/Angry Birds Classics, Angry Birds Classic #8.pdf" },
+      { title:"Angry Birds Classic", series:"Classics", issue:"#9",  cover:"covers/classic-9.jpg",  file:"files/Angry Birds Classics, Angry Birds Classic #9.pdf" },
+      { title:"Angry Birds Classic", series:"Classics", issue:"#10", cover:"covers/classic-10.jpg", file:"files/Angry Birds Classics, Angry Birds Classic #10.pdf" },
+      { title:"Angry Birds Classic", series:"Classics", issue:"#11", cover:"covers/classic-11.jpg", file:"files/Angry Birds Classics, Angry Birds Classic #11.pdf" },
+      { title:"Angry Birds Classic", series:"Classics", issue:"#12", cover:"covers/classic-12.jpg", file:"files/Angry Birds Classics, Angry Birds Classic #12.pdf" },
+      { title:"Angry Birds Classic", series:"Classics", issue:"#13", cover:"covers/classic-13.jpg", file:"files/Angry Birds Classics, Angry Birds Classic #13.pdf" },
+      { title:"Angry Birds Classic", series:"Classics", issue:"#14", cover:"covers/classic-14.jpg", file:"files/Angry Birds Classics, Angry Birds Classic #14.pdf" },
+      { title:"Angry Birds Classic", series:"Classics", issue:"#15", cover:"covers/classic-15.jpg", file:"files/Angry Birds Classics, Angry Birds Classic #15.pdf" },
+
+      // ── NEW ADVENTURE ─────────────────────────────────────────────────
+      { title:"New Adventure — Angry Birds Comics", series:"New Adventure", issue:"#1", cover:"covers/na-1.jpg", file:"files/New Adventure - Angry Birds, New Adventure - Angry Birds Comics #1.pdf" },
+      { title:"New Adventure — Angry Birds Comics", series:"New Adventure", issue:"#2", cover:"covers/na-2.jpg", file:"files/New Adventure - Angry Birds, New Adventure - Angry Birds Comics #2.pdf" },
+      { title:"New Adventure — Angry Birds Comics", series:"New Adventure", issue:"#3", cover:"covers/na-3.jpg", file:"files/New Adventure - Angry Birds, New Adventure - Angry Birds Comics #3.pdf" },
+      { title:"New Adventure — Angry Birds Comics", series:"New Adventure", issue:"#4", cover:"covers/na-4.jpg", file:"files/New Adventure - Angry Birds, New Adventure - Angry Birds Comics #4.pdf" },
+      { title:"New Adventure — Angry Birds Comics", series:"New Adventure", issue:"#5", cover:"covers/na-5.jpg", file:"files/New Adventure - Angry Birds, New Adventure - Angry Birds Comics #5.pdf" },
+
+    ];
+
+    // ── RENDER ENGINE ────────────────────────────────────────────────────
+    function fileUrl(path) {
+      // Safely encode each path segment so spaces, commas, # etc. work in URLs
+      return path.split('/').map(encodeURIComponent).join('/');
+    }
+
+    const grid      = document.getElementById('grid');
+    const noResults = document.getElementById('no-results');
+    const searchEl  = document.getElementById('search');
+    const filterBar = document.getElementById('filter-bar');
+    const countBar  = document.getElementById('count-bar');
 
     let activeFilter = 'All';
 
-    // Build series filter buttons
+    // Build filter buttons from unique series names
     const allSeries = ['All', ...new Set(COMICS.map(c => c.series))];
     allSeries.forEach(s => {
       const btn = document.createElement('button');
       btn.className = 'filter-btn' + (s === 'All' ? ' active' : '');
-      btn.textContent = s;
+      btn.textContent = s === 'All' ? 'All (' + COMICS.length + ')' : s;
       btn.addEventListener('click', () => {
         activeFilter = s;
         document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -407,29 +348,10 @@
       filterBar.appendChild(btn);
     });
 
-    function coverEl(src, alt) {
-      if (src) {
-        const img = document.createElement('img');
-        img.className = 'comic-cover';
-        img.alt = alt;
-        img.loading = 'lazy';
-        img.onerror = function() {
-          this.parentNode.innerHTML = placeholderHTML();
-        };
-        img.src = src;
-        return img;
-      }
-      const div = document.createElement('div');
-      div.innerHTML = placeholderHTML();
-      return div.firstChild;
-    }
-
-    function placeholderHTML() {
-      return `<div class="cover-placeholder">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-        <span>No cover</span>
-      </div>`;
-    }
+    const placeholderHTML = `<div class="cover-placeholder">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      <span>No cover</span>
+    </div>`;
 
     function render() {
       const q = searchEl.value.trim().toLowerCase();
@@ -440,38 +362,34 @@
       });
 
       grid.innerHTML = '';
+      noResults.style.display = filtered.length === 0 ? 'block' : 'none';
 
-      if (filtered.length === 0) {
-        noResults.style.display = 'block';
-        countLabel.textContent = '0 issues';
-        return;
-      }
-
-      noResults.style.display = 'none';
-      countLabel.textContent = filtered.length + ' issue' + (filtered.length !== 1 ? 's' : '');
+      const n = filtered.length;
+      countBar.textContent = n === 0 ? 'No results' : n + ' issue' + (n !== 1 ? 's' : '');
 
       filtered.forEach(comic => {
-        const card = document.createElement(comic.file ? 'a' : 'div');
-        card.className = 'comic-card';
-        if (comic.file) {
-          card.href = comic.file;
+        const hasFile = !!comic.file;
+        const card = document.createElement(hasFile ? 'a' : 'div');
+        card.className = 'comic-card' + (hasFile ? ' clickable' : '');
+        if (hasFile) {
+          card.href   = fileUrl(comic.file);
           card.target = '_blank';
-          card.rel = 'noopener';
+          card.rel    = 'noopener';
         }
 
         const coverWrap = document.createElement('div');
-        coverWrap.className = 'comic-cover-wrap';
+        coverWrap.className = 'cover-wrap';
 
         if (comic.cover) {
           const img = document.createElement('img');
-          img.className = 'comic-cover';
-          img.alt = comic.title + ' ' + comic.issue;
-          img.loading = 'lazy';
-          img.src = comic.cover;
-          img.onerror = () => { coverWrap.innerHTML = placeholderHTML(); };
+          img.className   = 'cover-img';
+          img.alt         = comic.title + (comic.issue ? ' ' + comic.issue : '');
+          img.loading     = 'lazy';
+          img.src         = comic.cover;
+          img.onerror     = () => { coverWrap.innerHTML = placeholderHTML; };
           coverWrap.appendChild(img);
         } else {
-          coverWrap.innerHTML = placeholderHTML();
+          coverWrap.innerHTML = placeholderHTML;
         }
 
         const info = document.createElement('div');
@@ -479,7 +397,7 @@
         info.innerHTML = `
           <div class="comic-series">${comic.series}</div>
           <div class="comic-title">${comic.title}</div>
-          <div class="comic-meta">${comic.issue}${comic.year ? ' &middot; ' + comic.year : ''}</div>
+          <div class="comic-meta">${[comic.issue, comic.year].filter(Boolean).join(' &middot; ')}</div>
         `;
 
         card.appendChild(coverWrap);
@@ -490,7 +408,6 @@
 
     searchEl.addEventListener('input', render);
     render();
-    countLabel.textContent = COMICS.length + ' issues';
   </script>
 </body>
 </html>
