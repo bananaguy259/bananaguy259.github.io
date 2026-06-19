@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comics — Bomb's Archive</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:       #09090e;
+      --surface:  #101017;
+      --card:     rgba(255,255,255,0.035);
+      --card-hover: rgba(255,255,255,0.06);
+      --border:   rgba(255,255,255,0.07);
+      --border-hover: rgba(255,255,255,0.14);
+      --red:      #b91c1c;
+      --red-glow: rgba(185,28,28,0.18);
+      --gold:     #c9a84c;
+      --gold-dim: rgba(201,168,76,0.12);
+      --text:     #e2e2e6;
+      --muted:    #6b6b7a;
+      --white:    #ffffff;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    /* NAV */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 1.5rem;
+      background: rgba(9,9,14,0.85);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { font-family:'Space Grotesk',sans-serif; font-size:1.05rem; font-weight:600; color:var(--white); text-decoration:none; }
+    .nav-logo span { color:var(--gold); }
+    .nav-link { font-family:'Space Grotesk',sans-serif; font-size:0.8rem; font-weight:500; color:var(--muted); text-decoration:none; transition:color 0.2s; }
+    .nav-link:hover { color:var(--white); }
+
+    /* PAGE HEADER */
+    .page-header {
+      padding: 4rem 1.5rem 2.5rem;
+      max-width: 900px;
+      margin: 0 auto;
+      border-bottom: 1px solid var(--border);
+    }
+    .header-tag { font-family:'Space Grotesk',sans-serif; font-size:0.65rem; font-weight:600; letter-spacing:0.25em; text-transform:uppercase; color:var(--gold); margin-bottom:0.8rem; }
+    .header-title { font-family:'Space Grotesk',sans-serif; font-size:clamp(2rem,6vw,3.2rem); font-weight:700; letter-spacing:-0.02em; color:var(--white); line-height:1.1; }
+    .header-sub { font-size:0.9rem; color:var(--muted); margin-top:0.75rem; line-height:1.6; }
+    .header-count { display:inline-block; margin-top:1rem; font-family:'Space Grotesk',sans-serif; font-size:0.72rem; font-weight:500; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); background:var(--card); border:1px solid var(--border); padding:0.3rem 0.8rem; border-radius:100px; }
+
+    /* FILTER BAR */
+    .filter-bar {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 1.2rem 1.5rem;
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--border);
+    }
+    .filter-btn {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 0.3rem 0.9rem;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .filter-btn:hover { color:var(--white); border-color:rgba(255,255,255,0.2); }
+    .filter-btn.active { background:var(--white); color:#09090e; border-color:var(--white); }
+
+    /* SEARCH */
+    .search-wrap {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 1rem 1.5rem 0;
+    }
+    .search-input {
+      width: 100%;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.65rem 1rem 0.65rem 2.6rem;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.875rem;
+      outline: none;
+      transition: border-color 0.2s;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' viewBox='0 0 24 24' stroke='%236b6b7a' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: 0.75rem center;
+    }
+    .search-input:focus { border-color: rgba(255,255,255,0.18); }
+    .search-input::placeholder { color: var(--muted); }
+
+    /* COMICS GRID */
+    .grid-wrap { max-width:900px; margin:0 auto; padding:1.5rem 1.5rem 5rem; }
+    .comics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 1rem;
+    }
+    @media(max-width:360px){ .comics-grid{ grid-template-columns:repeat(2,1fr); } }
+
+    /* COMIC CARD */
+    .comic-card {
+      display: flex;
+      flex-direction: column;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      text-decoration: none;
+      transition: border-color 0.2s, transform 0.2s, background 0.2s;
+      cursor: pointer;
+    }
+    .comic-card:hover {
+      border-color: var(--border-hover);
+      background: var(--card-hover);
+      transform: translateY(-3px);
+    }
+    .comic-cover-wrap {
+      position: relative;
+      aspect-ratio: 2/3;
+      background: #1a1a24;
+      overflow: hidden;
+    }
+    .comic-cover {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s;
+    }
+    .comic-card:hover .comic-cover { transform: scale(1.04); }
+
+    /* Placeholder when no image */
+    .cover-placeholder {
+      width: 100%; height: 100%;
+      display: flex; flex-direction:column; align-items:center; justify-content:center;
+      gap: 0.5rem;
+      background: linear-gradient(135deg, #1a1a24 0%, #12121a 100%);
+    }
+    .cover-placeholder svg { opacity:0.25; }
+    .cover-placeholder span { font-family:'Space Grotesk',sans-serif; font-size:0.6rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); opacity:0.5; }
+
+    .comic-info {
+      padding: 0.7rem 0.75rem 0.85rem;
+      flex: 1;
+    }
+    .comic-series {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.2rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .comic-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--white);
+      line-height: 1.3;
+      margin-bottom: 0.25rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .comic-meta {
+      font-size: 0.68rem;
+      color: var(--muted);
+    }
+
+    /* NO RESULTS */
+    .no-results { text-align:center; padding:4rem 1.5rem; color:var(--muted); font-family:'Space Grotesk',sans-serif; font-size:0.9rem; display:none; }
+
+    /* FOOTER */
+    footer { padding:2rem 1.5rem; border-top:1px solid var(--border); display:flex; flex-direction:column; align-items:center; gap:0.5rem; text-align:center; }
+    .footer-logo { font-family:'Space Grotesk',sans-serif; font-size:0.9rem; font-weight:600; color:var(--white); }
+    .footer-logo span { color:var(--gold); }
+    .footer-legal { font-size:0.72rem; color:var(--muted); opacity:0.5; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="nav-logo" href="index.html">Bomb's <span>Archive</span></a>
+    <a class="nav-link" href="index.html">
+      <svg style="display:inline;vertical-align:-2px;margin-right:4px" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Home
+    </a>
+  </nav>
+
+  <div class="page-header">
+    <p class="header-tag">Bomb's Archive</p>
+    <h1 class="header-title">Comics</h1>
+    <p class="header-sub">The Angry Birds comics collection. Click any issue to read.</p>
+    <span class="header-count" id="count-label">Loading...</span>
+  </div>
+
+  <div class="search-wrap">
+    <input class="search-input" type="search" id="search" placeholder="Search by title, series, or issue..." autocomplete="off">
+  </div>
+
+  <div class="filter-bar" id="filter-bar"></div>
+
+  <div class="grid-wrap">
+    <div class="comics-grid" id="grid"></div>
+    <div class="no-results" id="no-results">No comics match that search.</div>
+  </div>
+
+  <footer>
+    <div class="footer-logo">Bomb's <span>Archive</span></div>
+    <div class="footer-legal">Fan archive &mdash; not affiliated with Rovio Entertainment or Sega. Angry Birds &copy; Rovio.</div>
+  </footer>
+
+  <script>
+    // ─────────────────────────────────────────────────────────
+    //  COMICS DATA — edit this list to add your comics!
+    //
+    //  Each entry:
+    //    title   : shown on the card
+    //    series  : used for the filter buttons at the top
+    //    issue   : e.g. "#1", "Vol.1", "Special"
+    //    year    : publication year (optional)
+    //    cover   : path to the cover image you upload to GitHub
+    //              e.g. "covers/abc-1.jpg"
+    //              Leave as "" if you don't have a cover yet
+    //    file    : path or URL to the actual comic file
+    //              e.g. "files/angry-birds-comics-01.cbz"
+    //              Leave as "" if not hosted yet
+    // ─────────────────────────────────────────────────────────
+    const COMICS = [
+      {
+        title:  "Angry Birds Comics",
+        series: "Angry Birds Comics",
+        issue:  "#1",
+        year:   "2014",
+        cover:  "covers/abc-01.jpg",
+        file:   ""
+      },
+      {
+        title:  "Angry Birds Comics",
+        series: "Angry Birds Comics",
+        issue:  "#2",
+        year:   "2014",
+        cover:  "covers/abc-02.jpg",
+        file:   ""
+      },
+      {
+        title:  "Angry Birds Comics",
+        series: "Angry Birds Comics",
+        issue:  "#3",
+        year:   "2014",
+        cover:  "covers/abc-03.jpg",
+        file:   ""
+      },
+      {
+        title:  "Angry Birds Comics",
+        series: "Angry Birds Comics",
+        issue:  "#4",
+        year:   "2014",
+        cover:  "covers/abc-04.jpg",
+        file:   ""
+      },
+      {
+        title:  "Angry Birds Comics",
+        series: "Angry Birds Comics",
+        issue:  "#5",
+        year:   "2015",
+        cover:  "covers/abc-05.jpg",
+        file:   ""
+      },
+      {
+        title:  "Angry Birds Comics",
+        series: "Angry Birds Comics",
+        issue:  "#6",
+        year:   "2015",
+        cover:  "covers/abc-06.jpg",
+        file:   ""
+      },
+      {
+        title:  "Angry Birds Comics Holiday Special",
+        series: "Specials",
+        issue:  "Holiday 2013",
+        year:   "2013",
+        cover:  "covers/abc-holiday-2013.jpg",
+        file:   ""
+      },
+      {
+        title:  "Angry Birds Comics Holiday Special",
+        series: "Specials",
+        issue:  "Holiday 2014",
+        year:   "2014",
+        cover:  "covers/abc-holiday-2014.jpg",
+        file:   ""
+      },
+      {
+        title:  "Angry Birds Transformers",
+        series: "Transformers",
+        issue:  "#1",
+        year:   "2014",
+        cover:  "covers/abt-01.jpg",
+        file:   ""
+      },
+      {
+        title:  "Angry Birds Transformers",
+        series: "Transformers",
+        issue:  "#2",
+        year:   "2014",
+        cover:  "covers/abt-02.jpg",
+        file:   ""
+      },
+      {
+        title:  "Angry Birds Transformers",
+        series: "Transformers",
+        issue:  "#3",
+        year:   "2014",
+        cover:  "covers/abt-03.jpg",
+        file:   ""
+      },
+      {
+        title:  "Angry Birds Transformers",
+        series: "Transformers",
+        issue:  "#4",
+        year:   "2014",
+        cover:  "covers/abt-04.jpg",
+        file:   ""
+      },
+      {
+        title:  "Angry Birds Comics (2016)",
+        series: "Comics 2016",
+        issue:  "#1",
+        year:   "2016",
+        cover:  "covers/abc2016-01.jpg",
+        file:   ""
+      },
+      {
+        title:  "Angry Birds Comics (2016)",
+        series: "Comics 2016",
+        issue:  "#2",
+        year:   "2016",
+        cover:  "covers/abc2016-02.jpg",
+        file:   ""
+      },
+      {
+        title:  "Angry Birds Comics (2016)",
+        series: "Comics 2016",
+        issue:  "#3",
+        year:   "2016",
+        cover:  "covers/abc2016-03.jpg",
+        file:   ""
+      },
+      {
+        title:  "Angry Birds Comics (2016)",
+        series: "Comics 2016",
+        issue:  "#4",
+        year:   "2016",
+        cover:  "covers/abc2016-04.jpg",
+        file:   ""
+      },
+    ];
+    // ─────────────────────────────────────────────────────────
+
+    const grid       = document.getElementById('grid');
+    const noResults  = document.getElementById('no-results');
+    const searchEl   = document.getElementById('search');
+    const filterBar  = document.getElementById('filter-bar');
+    const countLabel = document.getElementById('count-label');
+
+    let activeFilter = 'All';
+
+    // Build series filter buttons
+    const allSeries = ['All', ...new Set(COMICS.map(c => c.series))];
+    allSeries.forEach(s => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-btn' + (s === 'All' ? ' active' : '');
+      btn.textContent = s;
+      btn.addEventListener('click', () => {
+        activeFilter = s;
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        render();
+      });
+      filterBar.appendChild(btn);
+    });
+
+    function coverEl(src, alt) {
+      if (src) {
+        const img = document.createElement('img');
+        img.className = 'comic-cover';
+        img.alt = alt;
+        img.loading = 'lazy';
+        img.onerror = function() {
+          this.parentNode.innerHTML = placeholderHTML();
+        };
+        img.src = src;
+        return img;
+      }
+      const div = document.createElement('div');
+      div.innerHTML = placeholderHTML();
+      return div.firstChild;
+    }
+
+    function placeholderHTML() {
+      return `<div class="cover-placeholder">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>No cover</span>
+      </div>`;
+    }
+
+    function render() {
+      const q = searchEl.value.trim().toLowerCase();
+      const filtered = COMICS.filter(c => {
+        const matchesSeries = activeFilter === 'All' || c.series === activeFilter;
+        const matchesSearch = !q || (c.title + ' ' + c.series + ' ' + c.issue).toLowerCase().includes(q);
+        return matchesSeries && matchesSearch;
+      });
+
+      grid.innerHTML = '';
+
+      if (filtered.length === 0) {
+        noResults.style.display = 'block';
+        countLabel.textContent = '0 issues';
+        return;
+      }
+
+      noResults.style.display = 'none';
+      countLabel.textContent = filtered.length + ' issue' + (filtered.length !== 1 ? 's' : '');
+
+      filtered.forEach(comic => {
+        const card = document.createElement(comic.file ? 'a' : 'div');
+        card.className = 'comic-card';
+        if (comic.file) {
+          card.href = comic.file;
+          card.target = '_blank';
+          card.rel = 'noopener';
+        }
+
+        const coverWrap = document.createElement('div');
+        coverWrap.className = 'comic-cover-wrap';
+
+        if (comic.cover) {
+          const img = document.createElement('img');
+          img.className = 'comic-cover';
+          img.alt = comic.title + ' ' + comic.issue;
+          img.loading = 'lazy';
+          img.src = comic.cover;
+          img.onerror = () => { coverWrap.innerHTML = placeholderHTML(); };
+          coverWrap.appendChild(img);
+        } else {
+          coverWrap.innerHTML = placeholderHTML();
+        }
+
+        const info = document.createElement('div');
+        info.className = 'comic-info';
+        info.innerHTML = `
+          <div class="comic-series">${comic.series}</div>
+          <div class="comic-title">${comic.title}</div>
+          <div class="comic-meta">${comic.issue}${comic.year ? ' &middot; ' + comic.year : ''}</div>
+        `;
+
+        card.appendChild(coverWrap);
+        card.appendChild(info);
+        grid.appendChild(card);
+      });
+    }
+
+    searchEl.addEventListener('input', render);
+    render();
+    countLabel.textContent = COMICS.length + ' issues';
+  </script>
+</body>
+</html>
