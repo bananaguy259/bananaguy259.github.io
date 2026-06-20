@@ -321,8 +321,8 @@
 
     // ── RENDER ENGINE ────────────────────────────────────────────────────
     function fileUrl(path) {
-      // Safely encode each path segment so spaces, commas, # etc. work in URLs
-      return path.split('/').map(encodeURIComponent).join('/');
+  if (path.startsWith('http')) return path;
+  return path.split('/').map(encodeURIComponent).join('/');
     }
 
     const grid      = document.getElementById('grid');
